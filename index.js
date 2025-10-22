@@ -26,9 +26,14 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    const compayCollection = client.db("WorkScout").collection("companies");
+    const companyCollection = client.db("WorkScout").collection("companies");
 
-    // get all company data
+    // post company data to the database
+    app.post("/companies", async (req, res) => {
+      const companyInfo = req.body;
+      const result = await companyCollection.insertOne(companyInfo);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
