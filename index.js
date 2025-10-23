@@ -34,6 +34,12 @@ async function run() {
       const result = await companyCollection.insertOne(companyInfo);
       res.send(result);
     });
+    // get companies 3 data from database
+    app.get("/companies/3", async (req, res) => {
+      const cursor = companyCollection.find({}).limit(3);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
