@@ -27,6 +27,16 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const companyCollection = client.db("WorkScout").collection("companies");
+    const usersCollection = client.db("WorkScout").collection("users");
+
+    // USERS -----------------
+    // store user information to the database
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      console.log(user);
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
 
     // COMPANY----------------------------
     // get all companies data from the database
