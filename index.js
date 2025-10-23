@@ -28,6 +28,11 @@ async function run() {
     await client.connect();
     const companyCollection = client.db("WorkScout").collection("companies");
 
+    // get all companies data from the database
+    app.get("/companies", async (req, res) => {
+      const result = await companyCollection.find({}).toArray();
+      res.send(result);
+    });
     // post company data to the database
     app.post("/companies", async (req, res) => {
       const companyInfo = req.body;
