@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -28,6 +28,7 @@ async function run() {
     await client.connect();
     const companyCollection = client.db("WorkScout").collection("companies");
 
+    // COMPANY----------------------------
     // get all companies data from the database
     app.get("/companies", async (req, res) => {
       const result = await companyCollection.find({}).toArray();
@@ -37,6 +38,14 @@ async function run() {
     app.post("/companies", async (req, res) => {
       const companyInfo = req.body;
       const result = await companyCollection.insertOne(companyInfo);
+      res.send(result);
+    });
+
+    // get companies details
+    app.get("/companydetails/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await companyCollection.findOne(filter);
       res.send(result);
     });
     // get companies 3 data from database
