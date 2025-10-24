@@ -72,6 +72,17 @@ async function run() {
       res.send(result);
     });
 
+    // get specific comanies
+    app.get("/selectedCompanies/:id", async (req, res) => {
+      const id = req.params.id;
+      const companies = await companyCollection
+        .find({
+          creatorId: id,
+        })
+        .toArray();
+      res.send(companies);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
