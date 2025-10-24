@@ -28,6 +28,7 @@ async function run() {
     await client.connect();
     const companyCollection = client.db("WorkScout").collection("companies");
     const usersCollection = client.db("WorkScout").collection("users");
+    const jobsCollection = client.db("WorkScout").collection("jobs");
 
     // USERS -----------------
     // store user information to the database
@@ -90,6 +91,19 @@ async function run() {
       res.send(result);
     });
 
+    // JOBS section --------------------
+    // get all jobs
+    app.get("/jobs", async (req, res) => {
+      const cursor = jobsCollection.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // store jobs to the database
+    app.post("/jobs", async (req, res) => {
+      const jobDetails = req.body;
+      const result = await jobsCollection.insertOne(jobDetails);
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
