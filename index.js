@@ -101,6 +101,8 @@ async function run() {
     // store jobs to the database
     app.post("/jobs", async (req, res) => {
       const jobDetails = req.body;
+      jobDetails.deadline = new Date(jobDetails.deadline).toISOString();
+      jobDetails.createdAt = new Date().toISOString();
       const result = await jobsCollection.insertOne(jobDetails);
       res.send(result);
     });
