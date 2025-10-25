@@ -130,6 +130,15 @@ async function run() {
       res.send(result);
     });
 
+    // get jobs in company Details section
+    app.get("/jobs/companyDetails/:byComapnyId", async (req, res) => {
+      const companyId = req.params.byComapnyId;
+      const jobs = await jobsCollection
+        .find({ companyId: companyId })
+        .toArray();
+      res.send(jobs);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
