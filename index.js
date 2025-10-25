@@ -139,6 +139,15 @@ async function run() {
       res.send(jobs);
     });
 
+    // get jobs by user id who create jobs
+    app.get("/jobs/user/:id", async (req, res) => {
+      const creatorId = req.params.id;
+      console.log(creatorId);
+      const query = { creatorId: creatorId };
+      const result = await jobsCollection.find(query).toArray();
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
@@ -150,6 +159,15 @@ async function run() {
     app.post("/bids", async (req, res) => {
       const bidInfo = req.body;
       const result = await bidsCollection.insertOne(bidInfo);
+      res.send(result);
+    });
+    // get bids info according to user id
+    app.get("/bids/:userId", async (req, res) => {
+      const userId = req.params.userId;
+      const cursor = bidsCollection.find({
+        userId: userId,
+      });
+      const result = await cursor.toArray();
       res.send(result);
     });
   } finally {
