@@ -29,6 +29,7 @@ async function run() {
     const companyCollection = client.db("WorkScout").collection("companies");
     const usersCollection = client.db("WorkScout").collection("users");
     const jobsCollection = client.db("WorkScout").collection("jobs");
+    const bidsCollection = client.db("WorkScout").collection("bids");
 
     // USERS -----------------
     // store user information to the database
@@ -134,6 +135,14 @@ async function run() {
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
+
+    // Bids --------------------------
+    // update bids
+    app.post("/bids", async (req, res) => {
+      const bidInfo = req.body;
+      const result = await bidsCollection.insertOne(bidInfo);
+      res.send(result);
+    });
   } finally {
     // await client.close();
   }
