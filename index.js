@@ -94,9 +94,23 @@ async function run() {
     // JOBS section --------------------
     // get all jobs
     app.get("/jobs", async (req, res) => {
-      const cursor = jobsCollection.find({});
-      const result = await cursor.toArray();
-      res.send(result);
+      // aggreegation or projection
+      const upCommingJobs = await jobsCollection
+        .aggregate([
+          {
+            $addFields: {
+              deadlineDate: { $toDate: "$deadline" }, // string to date convert
+            },
+          },
+          {
+            $match: { deadlineDate: { $gte: new Date() } },
+          },
+          {
+            $sort: { deadlineDate: 1 }, // ascending
+          },
+        ])
+        .toArray();
+      res.send(upCommingJobs);
     });
     // store jobs to the database
     app.post("/jobs", async (req, res) => {
@@ -106,6 +120,15 @@ async function run() {
       const result = await jobsCollection.insertOne(jobDetails);
       res.send(result);
     });
+
+    // get single jobs
+    app.get("/jobs/:id", async (req, res) => {
+      const jobsId = req.params.id;
+      const query = { _id: new ObjectId(jobsId) };
+      const result = await jobsCollection.findOne(query);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
