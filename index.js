@@ -39,6 +39,14 @@ async function run() {
       res.send(result);
     });
 
+    // get user info using their id
+    app.get("/users/userInfo/:id", async (req, res) => {
+      const userId = req.params.id;
+      const query = { _id: new ObjectId(userId) };
+      const result = await usersCollection.findOne(query);
+      res.send(result);
+    });
+
     // get specific users data
     app.get("/user/:email", async (req, res) => {
       const userEmail = req.params.email;
@@ -167,6 +175,14 @@ async function run() {
       const cursor = bidsCollection.find({
         userId: userId,
       });
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    //get bids info according to job id
+    app.get("/bids/jobDetails/:id", async (req, res) => {
+      const jobId = req.params.id;
+      const cursor = bidsCollection.find({ jobId: jobId });
       const result = await cursor.toArray();
       res.send(result);
     });
