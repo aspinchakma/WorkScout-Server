@@ -188,6 +188,14 @@ async function run() {
       const result = await bidsCollection.insertOne(bidInfo);
       res.send(result);
     });
+    app.delete("/bids/:id", async (req, res) => {
+      console.log(req.params.id);
+      const deletedId = req.params.id;
+      const query = { _id: new ObjectId(deletedId) };
+      const result = await bidsCollection.deleteOne(query);
+      res.send(result);
+      console.log(deletedId);
+    });
     // get bids info according to user id
     app.get("/bids/:userId", async (req, res) => {
       const userId = req.params.userId;
