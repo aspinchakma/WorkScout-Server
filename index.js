@@ -182,6 +182,14 @@ async function run() {
     );
 
     // Bids --------------------------
+
+    // get single bid by its id
+    app.get("/singlebid/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bidsCollection.findOne(query);
+      res.send(result);
+    });
     // update bids
     app.post("/bids", async (req, res) => {
       const bidInfo = req.body;
