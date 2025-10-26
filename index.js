@@ -169,7 +169,6 @@ async function run() {
     // get jobs by user id who create jobs
     app.get("/jobs/user/:id", async (req, res) => {
       const creatorId = req.params.id;
-      console.log(creatorId);
       const query = { creatorId: creatorId };
       const result = await jobsCollection.find(query).toArray();
       res.send(result);
@@ -190,19 +189,34 @@ async function run() {
       const result = await bidsCollection.findOne(query);
       res.send(result);
     });
-    // update bids
+
+    // update bids information by bid id
+    app.patch("/singlebid/:id", async (req, res) => {
+      const data = req.body;
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          deliveryTime: data.deliveryTime,
+          biddingAmount: data.biddingAmount,
+        },
+      };
+      const result = await bidsCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+    // get all bids information
+
     app.post("/bids", async (req, res) => {
       const bidInfo = req.body;
       const result = await bidsCollection.insertOne(bidInfo);
       res.send(result);
     });
+
     app.delete("/bids/:id", async (req, res) => {
-      console.log(req.params.id);
       const deletedId = req.params.id;
       const query = { _id: new ObjectId(deletedId) };
       const result = await bidsCollection.deleteOne(query);
       res.send(result);
-      console.log(deletedId);
     });
     // get bids info according to user id
     app.get("/bids/:userId", async (req, res) => {
