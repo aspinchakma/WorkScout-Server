@@ -33,6 +33,11 @@ async function run() {
 
     // USERS -----------------
     // store user information to the database
+    app.get("/users", async (req, res) => {
+      const cursor = usersCollection.find({});
+      const users = await cursor.toArray();
+      res.send(users);
+    });
     app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await usersCollection.insertOne(user);
@@ -181,8 +186,8 @@ async function run() {
 
     //get bids info according to job id
     app.get("/bids/jobDetails/:id", async (req, res) => {
-      const jobId = req.params.id;
-      const cursor = bidsCollection.find({ jobId: jobId });
+      const numberId = req.params.id;
+      const cursor = bidsCollection.find({ jobId: numberId });
       const result = await cursor.toArray();
       res.send(result);
     });
