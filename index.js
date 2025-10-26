@@ -59,6 +59,12 @@ async function run() {
       const result = await usersCollection.findOne(query);
       res.send(result);
     });
+    // get only 3 users data
+    app.get("/users/limitedData", async (req, res) => {
+      const cursor = usersCollection.find({}).limit(4);
+      const users = await cursor.toArray();
+      res.send(users);
+    });
 
     // COMPANY----------------------------
     // get all companies data from the database
