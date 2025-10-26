@@ -59,6 +59,14 @@ async function run() {
       const result = await usersCollection.findOne(query);
       res.send(result);
     });
+
+    // get users specific id
+    app.get("/users/userProfile/:id", async (req, res) => {
+      const userId = req.params.id;
+      const query = { _id: new ObjectId(userId) };
+      const userInfo = await usersCollection.findOne(query);
+      res.send(userInfo);
+    });
     // get only 3 users data
     app.get("/users/limitedData", async (req, res) => {
       const cursor = usersCollection.find({}).limit(4);
